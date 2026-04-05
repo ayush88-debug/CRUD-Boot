@@ -4,59 +4,47 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.practice.springBoot.demo.model.Product;
+import com.practice.springBoot.demo.repo.ProductRepo;
 
 
 @Service
 public class ProductService {
 	
-	List<Product> products = new ArrayList<>(Arrays.asList(new Product(101, "Iphone", 50000), new Product(102, "Laptop", 150000)));
+	@Autowired
+	ProductRepo repo;
 	
 	public List<Product> getProducts(){
-		return products;
+		return repo.findAll();
 	}
 
-	public Product getProductById(int prodId) {
-		return products.stream()
-				.filter(p -> p.getProdId() == prodId)
-				.findFirst().get();
+	public Product getProductById(Integer prodId) {
+		return repo.findById(prodId).orElse(new Product());
 	}
 	
 	public String addProduct(Product prod) {
-		products.add(prod);
+		repo.save(prod);
 		return "Product added successfully";
 	}
 	
 	public Product updateProduct(Product prod) {
 		
-		for(Product p: products) {
-			if(p.getProdId() == prod.getProdId()) {
-				p.setProdId(prod.getProdId());
-				p.setProdName(prod.getProdName());
-				p.setPrice(prod.getPrice());
-				
-				return p;
-			}
-		}
+		repo.save(prod);
 		
-		return null;
+		return prod;
 		
 	}
 	
 	
 	public String deleteProduct(Product prod) {
 		
-		for(int i=0; i<products.size(); i++) {
-			if(products.get(i).getProdId() == prod.getProdId()) {
-				products.remove(i);
-				return "Product successfully deleted";
-			}
-		}
+		repo.delete(prod);
 		
 		
-		return "Product not found / deleted";
+		return "Product deleted";
 	}
 	
 

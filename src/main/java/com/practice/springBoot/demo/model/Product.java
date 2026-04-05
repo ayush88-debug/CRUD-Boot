@@ -1,9 +1,11 @@
 package com.practice.springBoot.demo.model;
 
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
-@Data
+@Entity
 public class Product {
+	@Id
 	private int prodId;
 	private  String prodName;
 	private int price;
@@ -12,6 +14,8 @@ public class Product {
 		this.prodId = prodId;
 		this.prodName = prodName;
 		this.price = price;
+	}
+	public Product() {
 	}
 	public int getProdId() {
 		return prodId;
